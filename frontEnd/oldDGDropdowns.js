@@ -47,7 +47,7 @@ function createSelector (num) {
 
     //add remove button after each line
     let removeButton = document.createElement("removeButton");
-    removeButton.innerHTML = "<button class=\"btn btn-primary\" style='background-color: red; border-color:red' id=\"removeButton\">-</button>";
+    removeButton.innerHTML = "<button class=\"btn btn-primary\" style='background-color: red; border-color:red; padding-top: 0.4px; padding-bottom: 0.5px' id=\"removeButton\">-</button>";
 
     var selector = document.createElement("div");
     selector.setAttribute("class", "selector");
