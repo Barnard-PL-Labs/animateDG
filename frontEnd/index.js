@@ -88,7 +88,6 @@ function callSynth(id) {
         tslSpec = document.getElementById("specBox").value;
     }
 
-    tslSpec = encodeURIComponent(tslSpec.replace(/\n/g, " "));
     targetLang = "js";
 
     // get the object that we are dealing with
@@ -114,22 +113,17 @@ function callSynth(id) {
     let userID = getCookie("userID")
     console.log(userID)
 
-    fetch("https://graphviz-web-vvxsiayuzq-ue.a.run.app/tslsynth?tsl="+tslSpec+"&target="+targetLang)
-      .then(response => {
-        response.text().then(function(text) {
-          document.getElementById("codeBox").value = text;
-
-            let script = document.createElement("script");
-            script.text = "function updateState(e){\n" + text + "}";
-            script.setAttribute("id", "synth_script");
-            document.body.appendChild(script);
-            if(renderer != null && firstClick == false){
-                renderer.clear();
-                codeChange = true;
-            }
-        });
-      })
-      .catch(error => console.error(error));
+    $.post("https://graphviz-web-vvxsiayuzq-ue.a.run.app/tslsynth", {tsl: tslSpec, target: targetLang, user: userID}, function(data){
+        document.getElementById("codeBox").value = data;
+        let script = document.createElement("script");
+        script.text = "function updateState(e){\n" + data + "}";
+        script.setAttribute("id", "synth_script");
+        document.body.appendChild(script);
+        if(renderer != null && firstClick == false) {
+            renderer.clear();
+            codeChange = true;
+        }
+    })
 }
 
 function toTE() {
