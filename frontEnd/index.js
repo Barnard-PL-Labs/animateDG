@@ -111,6 +111,9 @@ function callSynth(id) {
     pointLight.position.set(5, 5, 5);
     scene.add(pointLight);
 
+    let userID = getCookie("userID")
+    console.log(userID)
+
     fetch("https://graphviz-web-vvxsiayuzq-ue.a.run.app/tslsynth?tsl="+tslSpec+"&target="+targetLang)
       .then(response => {
         response.text().then(function(text) {
@@ -152,6 +155,27 @@ function extractContent (assumeBody, guaranteeBody) {
     const logicText = document.createElement('span')
     logicText.innerHTML = htmlBody;
     return logicText.innerText;
+}
+
+function submit(){
+    ID = document.getElementById("userID")
+    document.cookie = `userID=${ID.value}`
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
 
 function zoom(obj){
