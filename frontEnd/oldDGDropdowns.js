@@ -1,4 +1,5 @@
 let ruleMap = ""
+let exprSeen = false
 async function loadGrammar() {
     let grammarDef = await fetch(grammarFile) //grammarFile defined in .html
         .then(response => {return response.text();});
@@ -90,40 +91,56 @@ function onchangeListener(event) {
     else if (Array.from(ruleMap.keys()).map(l => (this.value).includes(l))) {
         //generate dropdowns for all nonterminals, and insert text as needed
         //expects rule components to be space seperated
-        let newDropdowns = this.value.split(" ").map(e => {
+        console.log(event.target.nextSibling)
+        if (event.target.nextSibling.innerText === " <- "){
+            console.log("test")
+            exprSeen = true
+        }
+        else {
+            exprSeen = false
+        }
+
+        if (this.value === "\"count + 0.1\""){
             let replacementVal = document.createElement('span');
-            //more hacky overloading solution
-            if (this.value === "E4" || this.value === "G4" || this.value === "eigthnote"
-                || this.value === "halfnote") {
-                replacementVal.innerHTML = " " + this.value + " ";
-            }
-            //deal with spacing here
-            else {
+            replacementVal.innerHTML = " count + 0.1 "
+            event.target.parentNode.insertBefore(replacementVal, this);
+        }
+        else if (this.value === "\"count - 0.1\""){
+            let replacementVal = document.createElement('span');
+            replacementVal.innerHTML = " count - 0.1 "
+            event.target.parentNode.insertBefore(replacementVal, this);
+        }
+        else if (this.value === "\"t * -1\""){
+            let replacementVal = document.createElement('span');
+            replacementVal.innerHTML = " t * -1 "
+            event.target.parentNode.insertBefore(replacementVal, this);
+        }
+        else {
+            let newDropdowns = this.value.split(" ").map(e => {
+                let replacementVal = document.createElement('span');
+                //deal with spacing here
+
                 replacementVal.innerHTML = " " + e.slice(1, -1) + " ";
                 Array.from(ruleMap.keys()).forEach(g => {
                     if (g == e) {
                         replacementVal = genDropdown(g);
                     }
                 })
+                return replacementVal;s
+            })
+
+            if (newDropdowns.length > 1) {
+                newDropdowns = addParens(newDropdowns);
             }
-            return replacementVal;
-        })
 
-        if (newDropdowns.length > 1) {
-            newDropdowns = addParens(newDropdowns);
+            if (newDropdowns[0].innerText === " count "  && exprSeen === true){
+                changeDropdown("count")
+            }
+
+            newDropdowns.forEach(elem => {
+                event.target.parentNode.insertBefore(elem, this);
+            });
         }
-
-        if (newDropdowns[0].innerText === " noteToPlay "){
-            changeDropdown("note")
-        }
-        else if(newDropdowns[0].innerText === " rhythm ") {
-            changeDropdown("rhythm")
-        }
-
-        newDropdowns.forEach(elem => {
-            event.target.parentNode.insertBefore(elem, this);
-        });
-
     }
     this.remove();
 }
@@ -131,13 +148,10 @@ function onchangeListener(event) {
 //super hacky way to solve function overloading problem
 function changeDropdown(fxn) {
     let nextDrop = event.target.nextSibling.nextSibling
-    if (fxn === "note") {
-        nextDrop[0].value = nextDrop[0].text = "E4";
-        nextDrop[1].value = nextDrop[1].text = "G4";
-    }
-    else{
-        nextDrop[0].value = nextDrop[0].text = "eigthnote";
-        nextDrop[1].value = nextDrop[1].text = "halfnote";
+    if (fxn === "count") {
+        nextDrop[0].value = nextDrop[0].text = "\"count + 0.1\"";
+        nextDrop[1].value = nextDrop[1].text = "\"count - 0.1\"";
+        nextDrop[2].value = nextDrop[2].text = "";
     }
 }
 

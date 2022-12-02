@@ -2,8 +2,8 @@
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 5 );
 camera.position.z = 2;
-camera.position.set(2, 3, 2); //this makes the cube look at an angle
-camera.lookAt(2, 2, 0);
+camera.position.set(0, 1, 2); //this makes the cube look at an angle
+camera.lookAt(0, 0, 0);
 
 //creating the cube
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -53,7 +53,7 @@ function sceneBuild() { //function called when "Animate" is pressed
     function animate(){
         if(test == check){
             requestAnimationFrame(animate);
-            t += 1;
+            t += 0.1;
             rand = Math.random();
             updateState(myEvent);
             cube.material.color.set(cubeColor);
@@ -107,7 +107,7 @@ function callSynth(id) {
     }
 
     const pointLight = new THREE.PointLight(0xfffffff);
-    pointLight.position.set(5, 5, 5);
+    pointLight.position.set(3, 3, 3);
     scene.add(pointLight);
 
     let userID = getCookie("userID")
@@ -191,10 +191,10 @@ function changeVal(obj){
 
 function reset(c){
     c.scale.set(1, 1, 1);
-    c.position.set(2, 2, 0);
+    c.position.set(0, 0, 0);
     c.rotation.set(0, 0, 0);
-    t = 2;
-    count = 2;
+    t = 0;
+    count = 0;
     cubeColor = 0xffffff;
     polyColor = 0xffffff;
     sphereColor = 0xffffff;
